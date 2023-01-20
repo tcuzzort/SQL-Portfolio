@@ -1,0 +1,25 @@
+#1. Creating table database 
+CREATE TABLE diveshop (id integer primary key, item text, price integer, quantity integer);
+
+#2. Adding values into database table
+INSERT INTO diveshop VALUES (1, "Air Tank", 50, 30);
+INSERT INTO diveshop VALUES (2, "BC", 150, 30);
+INSERT INTO diveshop VALUES (3, "Wet Suit", 100, 40);
+INSERT INTO diveshop VALUES (4, "Fins", 80, 100);
+INSERT INTO diveshop VALUES (5, "Regulator", 100, 40);
+INSERT INTO diveshop VALUES (6, "Mask", 30, 100);
+INSERT INTO diveshop VALUES (7, "Dive PC", 200, 40);
+INSERT INTO diveshop VALUES (8, "Dry Suit", 300, 20);
+INSERT INTO diveshop VALUES (9, "t-shirt", 20, 50);
+INSERT INTO diveshop VALUES (10, "Dive Boots", 50, 20);
+INSERT INTO diveshop VALUES (11, "Dive Log", 10, 20);
+INSERT INTO diveshop VALUES (12, "Dive Weights", 40, 30);
+INSERT INTO diveshop VALUES (13, "Anti-Fog", 20, 10);
+INSERT INTO diveshop VALUES (14, "Snorkels", 30, 20);
+INSERT INTO diveshop VALUES (15, "Gloves", 40, 10);
+
+#3. Calculating the cost of inventory and ordering the data from most expensive items to least. 
+SELECT *,
+price*quantity as Cost 
+From diveshop 
+order by price desc
