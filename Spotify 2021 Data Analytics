@@ -1,0 +1,59 @@
+SELECT *
+FROM BIT_DB.Spotifydata;
+
+--#1. Who are the top 10 artists and songs by popularity?
+SELECT
+id,
+artist_name,
+track_name
+FROM BIT_DB.Spotifydata
+ORDER BY id asc LIMIT 10;
+
+--#2. Do any artist have more than one song in the top 50?
+SELECT 
+artist_name,
+COUNT(track_name)
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+HAVING COUNT(track_name) > 1;
+
+--#2. What is the average tempo for the 10 most popular songs on Spotify of 2021?
+SELECT 
+AVG(tempo),
+(SELECT
+AVG(tempo)
+FROM BIT_DB.Spotifydata
+WHERE id <11) AS Top_10_tempo,
+(SELECT
+AVG(tempo)
+FROM BIT_DB.Spotifydata
+WHERE id <11) - AVG(tempo) AS Top_10_tempo_difference
+FROM BIT_DB.Spotifydata;
+
+--#3. What is the average danceability for the 10 most popular songs on Spotify of 2021?
+
+SELECT 
+AVG(danceability)
+FROM BIT_DB.Spotifydata
+WHERE id<11;
+
+--#4. What is the maximum loudness?
+SELECT MAX(loudness)
+FROM BIT_DB.Spotifydata;
+
+--#5.Calculate the average popularity for the artists in the Spotify data table. Then, for every artist with an average popularity of 90 or above, show their name, their average popularity, and label them as a “Top Star”.
+
+WITH Popularity_AVG_CTE AS ( 
+SELECT 
+s.artist_name,
+AVG(s.popularity) AS avg_popularity
+FROM SpotifyData s
+GROUP BY s.artist_name
+)
+
+SELECT 
+artist_name,
+avg_popularity
+'Top Star' AS tag
+FROM Popularity_AVG_CTE
+WHERE avg_popularity>=90;
