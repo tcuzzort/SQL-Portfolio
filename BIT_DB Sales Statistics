@@ -1,0 +1,57 @@
+-- Cleaning data - removing invalid order IDs.
+SELECT *
+FROM BIT_DB.customers
+WHERE length(order_id) = 6 AND order_id <> 'Order ID'
+
+--#1. How many orders were placed in January?
+SELECT 
+COUNT(orderID)
+FROM BIT_DB.JanSales
+WHERE length(orderID) = 6
+
+--#2.How many of those orders were for an iPhone?
+SELECT
+COUNT(orderID)
+FROM BIT_DB.JanSales
+WHERE length(orderID) = 6 AND Product = 'iPhone'
+
+--#3.Select the customer account numbers for all the orders that were placed in February.
+SELECT
+customers.acctnum
+FROM BIT_DB.FebSales 
+    LEFT JOIN BIT_DB.customers
+    ON FebSales.orderID = customers.order_id
+WHERE length(orderID) = 6
+
+--#4. Which product was the cheapest one sold in January, and what was the price?
+SELECT
+distinct Product,
+price
+FROM BIT_DB.JanSales
+WHERE price IN (SELECT min(price) FROM BIT_DB.JanSales)
+
+--#5. What is the total revenue for each product sold in January? (Revenue can be calculated using the number of products sold and the price of the products).
+SELECT
+product,
+SUM(Quantity)*price
+FROM BIT_DB.JanSales
+WHERE length(orderID) = 6
+GROUP BY product
+
+--#6. Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+SELECT
+Product,
+SUM(Quantity),
+SUM(Quantity*price) as Total_Revenue
+FROM BIT_DB.FebSales
+WHERE length(orderID) = 6 AND location LIKE '%548 Lincoln St%'
+GROUP BY Product
+
+--#7.How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
+SELECT
+COUNT(distinct customers.acctnum),
+AVG(FebSales.Quantity*FebSales.price) as Avg_Spend_Amt
+FROM BIT_DB.FebSales
+    LEFT JOIN BIT_DB.customers
+    ON FebSales.orderID = customers.order_id
+WHERE length(FebSales.orderID) = 6 AND FebSales.Quantity >2
