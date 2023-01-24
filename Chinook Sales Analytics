@@ -1,0 +1,39 @@
+--#1.Show Customers (their full names, customer ID, and country) who are not in the US. 
+SELECT
+CustomerId,
+FirstName,
+LastName,
+Country
+FROM chinook.customers
+WHERE Country <> 'USA'
+
+--#2. Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT
+customers.FirstName,
+customers.LastName,
+invoices.invoiceid,
+invoices.InvoiceDate,
+invoices.BillingCountry
+FROM chinook.customers
+    JOIN chinook.invoices
+    ON customers.customerid = invoices.customerid
+WHERE invoices.BillingCountry = 'Brazil'
+
+--#3. What are the total sales for 2009?
+SELECT
+ROUND(SUM(Total)) AS 'Total Sales - 2009'
+FROM chinook.invoices
+WHERE InvoiceDate LIKE '2009%'
+
+--#4. Show the total sales made by each sales agent.
+SELECT
+customers.SupportRepId,
+employees.FirstName,
+employees.LastName,
+ROUND(SUM(invoices.total)) AS SalesTotal
+FROM chinook.invoices
+    LEFT JOIN chinook.customers
+    ON invoices.customerid = customers.customerid
+    LEFT JOIN chinook.employees
+    ON customers.SupportRepId = employees.EmployeeId
+GROUP BY SupportRepId
