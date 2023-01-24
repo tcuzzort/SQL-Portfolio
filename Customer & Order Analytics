@@ -1,3 +1,5 @@
+#In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data.
+
 -- Cleaning data - removing invalid order IDs.
 SELECT *
 FROM BIT_DB.customers
