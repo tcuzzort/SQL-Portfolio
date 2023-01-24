@@ -1,0 +1,97 @@
+--SQL using date functions
+
+SELECT 
+
+GETDATE() AS DateTimeStamp,
+DueDate,
+ShipDate,
+DATEDIFF(day,ShipDate,DueDate) AS DaysBetweenShippedAndDueDate,
+DATEDIFF(hour,ShipDate,DueDate) AS HoursBetweenShippedAndDueDate,
+DATEADD(day,10,DueDate ) AS DueDatePlusTenDays
+
+From FactInternetSales
+
+-- SQL using text variations
+
+SELECT 
+
+EnglishProductName AS EnglishProductName,
+EnglishDescription AS ProductDescription,
+CONCAT(EnglishProductName, '-',EnglishDescription) AS ProductNameAndDesciption,
+LEN(EnglishDescription) AS DesciptionLength,
+UPPER(EnglishProductName) AS UpperProductName,
+LOWER(EnglishProductName) AS LowerProductName,
+REPLACE(EnglishProductName,'Front', 'Ultra Durable Front') AS EnglishProductNameReplaced,
+LEFT(ProductAlternateKey,2) AS ProductShort,
+RIGHT(ProductAlternateKey,LEN(ProductAlternateKey)-3) AS ProductAlternativeKey2
+
+From DimProduct
+
+WHERE ProductKey = 555
+
+-- SQL Using AND and OR stmts
+
+SELECT 
+
+EnglishProductName AS EnglishProductName,
+EnglishDescription AS ProductDescription,
+Color, 
+[Status],
+Class
+
+FROM DimProduct
+
+WHERE (Class <> 'H' OR Class IS NULL) AND [Status] IS NOT NULL
+
+-- SQL IN and BETWEEN Stmts
+
+SELECT 
+
+EnglishProductName AS EnglishProductName,
+EnglishDescription AS ProductDescription,
+Color, 
+[Status],
+Class,
+SafetyStockLevel
+
+FROM DimProduct
+
+--WHERE Color IN('Black','Silver','White','Yellow')
+
+WHERE SafetyStockLevel BETWEEN 500 AND 1000 AND [Status] IS NOT NULL
+
+--SQL manipulating columns using IIF and SQL formatting
+
+SELECT 
+    FirstName,
+    IIF(MiddleName IS NULL,'UNKN',MiddleNAme) AS MiddleName,
+    ISNULL(MiddleName,'UNKN') AS MiddleName2,
+    COALESCE(MiddleName,'UNKN') AS MiddleName3,
+    LastName,
+    YearlyIncome,
+    EmailAddress,
+    IIF(YearlyIncome>50000,'Above Average','Below Average') AS IncomeCategory,
+    CASE 
+        When NumberChildrenAtHome = 0 THEN '0'
+        When NumberChildrenAtHome = 1 THEN '1'
+        When NumberChildrenAtHome BETWEEN 2 AND 4 THEN '2-4'
+        When NumberChildrenAtHome >=5 THen '5'
+        ELSE 'UNKN'
+    END AS NumberChildrenCategory,
+    NumberChildrenAtHome AS ActualChildren
+
+FROM DimCustomer
+
+WHERE IIF(YearlyIncome>50000,'Above Average','Below Average') = 'Above Average'
+
+-- SQL CAST function
+
+SELECT
+
+EnglishProductName,
+ReOrderPoint,
+SafetyStockLevel,
+CAST(ReOrderPoint AS decimal(8,4)) / CAST(SafetyStockLevel as decimal(8,4)) AS PctOfTotalSafetyStock
+
+FROM DimProduct
+Where [Status] = 'Current'
